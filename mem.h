@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <inttypes.h>
 
+// Preprocess
+#define SIZE_T_SIZE 8
+#define OFFSET 16
+
 /* Return a pointer to a new block of storage with at least 'size' bytes space.
    The 'size' value must be positive.  If it is not, or if there is another
    problem allocating the memory the function should return NULL. */
