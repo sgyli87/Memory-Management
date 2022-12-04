@@ -17,7 +17,9 @@
 // freeNode will hold the info about the block + pointer to the next node
 typedef struct freeNode {
   uintptr_t size;  // useable memory, doesn't include freeNode
+  uintptr_t addr;
   struct freeNode* next;
+  struct freeNode* prev;
 } freeNode;
 
 /* These global variables would usually be static globals in one module.
@@ -36,5 +38,11 @@ extern uintptr_t totalmalloc;
    Blocks are not touching
    If no errors are detected, this function should return silently. */
 void check_heap();
+
+freeNode* makeNewNode(uintptr_t size, uintptr_t addr, freeNode* next);
+
+void insertNewNode(freeNode* freelist, uintptr_t newSize, uintptr_t free_addr, freeNode* next);
+
+void insertFirstNode(uintptr_t free_size, uintptr_t free_addr, freeNode* next);
 
 #endif

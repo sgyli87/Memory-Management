@@ -29,8 +29,10 @@ void freemem(void* p);
    on the free list.
    n_free_blocks: the total number of individual blocks currently stored
    on the free list. */
-void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
-                   uintptr_t* n_free_blocks);
+void get_mem_stats(
+                  uintptr_t* total_size, 
+                  uintptr_t* total_free,
+                  uintptr_t* n_free_blocks);
 
 /* Print a formatted listing on file f showing the blocks on the free list. */
 void print_heap(FILE * f);

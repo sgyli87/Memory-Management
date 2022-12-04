@@ -11,8 +11,14 @@
    implement getmem and freemem functions.  */
 
 /* initialize global variables */
+freeNode* freeList = NULL;
+uintptr_t total = 0;
 
 /* What helper functions will you need?  Declare here. */
+size_t spaceAvail(freeNode *freeList, uintptr_t size);
+void* split(freeNode* freeList, uintptr_t size, size_t space, int added);
+void extendSpace(uintptr_t size);
+void freeLastNode(size_t size);
 
 /* Define your functions below: */
 
