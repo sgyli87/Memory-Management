@@ -6,8 +6,8 @@
 #include "mem_impl.h"
 
 void check_heap() {
-  if (!freelist) return;
-  freeNode* currentNode = freelist;
+  if (!freeList) return;
+  freeNode* currentNode = freeList;
   uintptr_t minsize = currentNode->size;
 
   while (currentNode != NULL) {
@@ -32,7 +32,7 @@ void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
   *total_free = 0;
   *n_free_blocks = 0;
 
-  freeNode* currentNode = freelist;
+  freeNode* currentNode = freeList;
   while (currentNode) {
     *n_free_blocks = *n_free_blocks + 1;
     *total_free = *total_free + (currentNode->size + NODESIZE);
@@ -42,7 +42,7 @@ void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
 
 void print_heap(FILE *f) {
   printf("Printing the heap\n");
-  freeNode* currentNode = freelist;
+  freeNode* currentNode = freeList;
   while (currentNode !=NULL) {
     fprintf(f, "%" PRIuPTR, (uintptr_t)currentNode);
     fprintf(f, ", size: %" PRIuPTR, currentNode->size);

@@ -1,4 +1,4 @@
-/* memory.c
+/* getmem.c
    implements getmem (malloc)
    CSE 374 HW6
 */
