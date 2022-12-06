@@ -39,9 +39,7 @@ extern uintptr_t totalmalloc;
 void check_heap();
 
 freeNode* makeNewNode(uintptr_t size, uintptr_t addr, freeNode* next);
-
-void insertNewNode(freeNode* freelist, uintptr_t newSize, uintptr_t free_addr, freeNode* next);
-
+void insertNewNode(freeNode* freelist, uintptr_t newSize, uintptr_t free_addr);
 void insertFirstNode(uintptr_t free_size, uintptr_t free_addr, freeNode* next);
 
 #endif
