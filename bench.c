@@ -31,17 +31,16 @@ int main(int argc, char** argv ) {
   int params[6] = {10000, 50, 10, 200, 20000, 0};
 
   // generate random seed
-  time_t t;
+  time_t now;
   struct tm *tm;
-  t = time(0);
-
-  if((tm == localtime(&t))== NULL){
-   printf("Failed to extract time.\n");
-   return 1;
+  now = time(0);
+  if ((tm = localtime(&now)) == NULL) {
+    printf("Error extracting time stuff\n");
+    return 1;
   }
   params[5] = tm->tm_hour * 60 + tm->tm_min;
 
-  for(int i = 0; i < argc; i++){
+  for(int i = 1; i < argc; i++){
    setParamInfo(argv[i],params);
   }
   
