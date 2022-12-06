@@ -94,7 +94,7 @@ void groupAdjacent(freeNode* my_freeList) {
   }
 
   while (curr->next != NULL) {
-    if (isAdjacent(curr->addr, \
+    if (checkAdjacency(curr->addr, \
                    curr->next->addr, \
                    curr->size, \
                    curr->next->size)) {
