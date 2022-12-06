@@ -82,13 +82,13 @@ void run_tests(int* params) {
         size_t pSize = (size_t) (rand() % (large_limit - small_limit)\
                                  + small_limit + 1);
         p = getmem(pSize);
-        setFE(p, pSize);
+        storeHex(p, pSize);
       } else {
         // for small block
         // random number from 1-small_limit
         size_t pSize = (size_t) (rand() % small_limit + 1);
         p = getmem(pSize);
-        setFE(p, pSize);
+        storeHex(p, pSize);
       }
       blocks[size] = p;
       size++;
@@ -96,7 +96,7 @@ void run_tests(int* params) {
       if (size > 0) {
         int index = rand() % size;
         freemem(blocks[index]);
-        unsetFE(blocks[index]);
+        freeHex(blocks[index]);
         blocks[index] = blocks[size - 1];
         size--;
       }
