@@ -108,7 +108,7 @@ void run_tests(int* params) {
     
     if (((float) i / ntrials >= percent) || i == ntrials - 1) {
       end_time = clock();
-      printf("end is %ld\n", end_time);
+      printf("end time is %ld\n", end_time);
       cpu_timeElapse = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
       get_mem_stats(total_size, total_free, n_free_blocks);
       printf("***--------------%d--------------***\n", \
@@ -119,8 +119,11 @@ void run_tests(int* params) {
              *total_size);
       printf("Total number of blocks in freelist: %ld\n", \
              *n_free_blocks);
-      printf("Average numbers of bytes in free storage: %ld\n", \
-             *total_free / *n_free_blocks);
+      (n_free_blocks == 0) ? 
+            printf("Average numbers of bytes in free storage: %d\n", \
+            0):
+            printf("Average numbers of bytes in free storage: %ld\n", \
+            *total_free / *n_free_blocks);
 
       percent = percent + 0.1;
     }
