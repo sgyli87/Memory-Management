@@ -34,7 +34,6 @@ int main(int argc, char** argv ) {
     printf("Error extracting time stuff\n");
     return 1;
   }
-
   (argc > 1) ? (params[0] = atoi(argv[1])) : (params[0] = 10000); // ntrials
   (argc > 2) ? (params[1] = atoi(argv[2])) : (params[1] = 50); // pctget
   (argc > 3) ? (params[2] = atoi(argv[3])) : (params[2] = 10); // pctlarge
