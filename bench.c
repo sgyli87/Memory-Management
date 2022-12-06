@@ -10,8 +10,8 @@
 
 #define MAX_IN 50
 void run_tests();
-void setFE(void *pointer, size_t size);
-void unsetFE(void *pointer);
+void storeHex(void *pointer, size_t size);
+void freeHex(void *pointer);
 
 
 /* Synopsis:   bench (main)
@@ -137,7 +137,7 @@ void run_tests(int* params) {
 }
 
 // store hex value 0xFE to first 16 bytes
-void setFE(void *pointer, size_t size) {
+void storeHex(void *pointer, size_t size) {
   if (size > 16) {
     size = 16;
   }
@@ -150,7 +150,7 @@ void setFE(void *pointer, size_t size) {
 }
 
 // delete hex value and replace it with 0x00
-void unsetFE(void *pointer) {
+void freeHex(void *pointer) {
   unsigned char filler = 0x00;
   for (int i = 0; i < 16; i++) {
     unsigned char *current = (unsigned char *) ((uintptr_t) pointer + i);
