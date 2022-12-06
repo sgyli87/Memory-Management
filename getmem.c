@@ -11,7 +11,7 @@
 
 /* initialize global variables */
 freeNode* freeList = NULL;
-uintptr_t total = 0;
+uintptr_t totalmalloc = 0;
 
 /* helper functions*/
 size_t spaceAvail(freeNode *freeList, uintptr_t size);
@@ -195,7 +195,7 @@ void extendSpace(uintptr_t size){
       fprintf(stderr, "Error: Failed to assign.\n");
       freeList = NULL;
    }
-   total = total + requestSize + OFFSET;
+   totalmalloc = totalmalloc + requestSize + OFFSET;
 
    size_t newSize = requestSize;
    size_t *newSizePtr = (size_t *)newMem;
