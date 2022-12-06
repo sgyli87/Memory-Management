@@ -10,7 +10,7 @@
 #define M_SIZE 4096
 
 /* initialize global variables */
-freeNode* freeList = NULL;
+freeNode* freelist = NULL;
 uintptr_t totalmalloc = 0;
 
 /* helper functions*/
@@ -30,22 +30,22 @@ void* getmem(uintptr_t size) {
       size = size + (16 - size % 16);
    }
 
-   size_t space = spaceAvail(freeList, size);
+   size_t space = spaceAvail(freelist, size);
    int added = 0;
 
    if (space) {
       check_heap();
-      return split(freeList, size, space, added);
+      return split(freelist, size, space, added);
    } else {
       extendSpace(size);
-      if (freeList == NULL) {
+      if (freelist == NULL) {
          fprintf(stderr, "No memory available.\n");
          return NULL;
       }
       added = 1;
       space = size;
       check_heap();
-      return split(freeList, size, space, added);
+      return split(freelist, size, space, added);
    }
    check_heap();
 }
@@ -90,7 +90,7 @@ void* split(freeNode* freeList1, uintptr_t size,size_t space, int added){
          curr->addr = newFirstAddr;
       }else{
          *firstPart = *firstPart + newFirstSize + OFFSET;
-         freeList = freeList1->next;
+         freelist = freeList1->next;
          free(curr);
       }
       return (void *) firstPartHead;
@@ -164,13 +164,13 @@ freeNode* makeNewNode(size_t size, uintptr_t addr, freeNode* next) {
    insert a new node while keep the ascending address order
 */
 void insertNewNode(freeNode* freeList1, size_t newSize, uintptr_t newAddr){
-   if (freeList == NULL) {
-      freeList = makeNewNode(newSize, newAddr, NULL);
+   if (freelist == NULL) {
+      freelist = makeNewNode(newSize, newAddr, NULL);
    }
 
-   if(newAddr < freeList->addr){
+   if(newAddr < freelist->addr){
       freeNode* newNode = makeNewNode(newSize, newAddr, freeList1);
-      freeList = newNode;
+      freelist = newNode;
    } else {
       freeNode* curr = freeList1;
       while (curr->next != NULL && newAddr > curr->next->addr) {
@@ -193,7 +193,7 @@ void extendSpace(uintptr_t size){
    uintptr_t newMem = (uintptr_t)malloc(requestSize + OFFSET);
    if((void *) newMem == NULL){
       fprintf(stderr, "Error: Failed to assign.\n");
-      freeList = NULL;
+      freelist = NULL;
    }
    totalmalloc = totalmalloc + requestSize + OFFSET;
 
@@ -202,10 +202,10 @@ void extendSpace(uintptr_t size){
    *newSizePtr = newSize;
    uintptr_t newAddr = newMem + OFFSET;
 
-   if (freeList == NULL) {
-      freeList = makeNewNode(newSize, newAddr, NULL);
+   if (freelist == NULL) {
+      freelist = makeNewNode(newSize, newAddr, NULL);
    } else {
-      insertNewNode(freeList, newSize, newAddr);
+      insertNewNode(freelist, newSize, newAddr);
    }
 }
 
@@ -214,12 +214,12 @@ void extendSpace(uintptr_t size){
    intended to be used in freemem()
 */
 void insertFirstNode(size_t f_size, uintptr_t f_addr, freeNode* next) {
-  freeList = makeNewNode(f_size, f_addr, next);
+  freelist = makeNewNode(f_size, f_addr, next);
 }
 
 // remove the last node in the freeList given its size.
 void freeLastNode(size_t size) {
-  freeNode* curr = freeList;
+  freeNode* curr = freelist;
   while (curr != NULL && curr->next != NULL) {
     if (curr->next->size == size) {
       free(curr->next);

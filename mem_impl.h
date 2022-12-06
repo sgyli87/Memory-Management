@@ -25,7 +25,7 @@ typedef struct freeNode {
    However, to accommodate our separate files for utils and basic memory
    functions we are declaring them here.  They need to be initialized
 */
-extern freeNode* freeList;
+extern freeNode* freelist;
 extern uintptr_t totalmalloc;
 
 /* Check for possible problems with the free list data structure.

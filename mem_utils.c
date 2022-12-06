@@ -6,24 +6,23 @@
 #include "mem_impl.h"
 
 void check_heap() {
-  if (!freeList) return;
-  freeNode* currentNode = freeList;
-  uintptr_t minsize = currentNode->size;
+    freeNode* current = freelist;
+    while (current != NULL && current->next != NULL) {
+    // Increasing memory addresses
+    assert(current->addr < current->next->addr);
 
-  while (currentNode != NULL) {
-    if (currentNode->size < minsize) {
-      minsize = currentNode->size;
+    // Positive size and greater than min size
+    assert(current->size > 0);
+
+    // Blocks Don't Overlap
+    assert((current->addr + current->size) + OFFSET < (current->next->addr));
+
+    // Blocks Don't Touch
+    assert((current->addr + current->size) + OFFSET != (current->next->addr));
+
+    current = current->next;
     }
-    if (currentNode->next != NULL) {
-      assert((uintptr_t)currentNode <(uintptr_t)(currentNode->next));
-      assert((uintptr_t)currentNode + currentNode->size + NODESIZE
-              <(uintptr_t)(currentNode->next));
-    }
-    currentNode = currentNode->next;
-  }
-  // go through free list and check for all the things
-  if (minsize == 0) print_heap( stdout);
-  assert(minsize >= MINCHUNK);
+    return;
 }
 
 void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
@@ -32,7 +31,7 @@ void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
   *total_free = 0;
   *n_free_blocks = 0;
 
-  freeNode* currentNode = freeList;
+  freeNode* currentNode = freelist;
   while (currentNode) {
     *n_free_blocks = *n_free_blocks + 1;
     *total_free = *total_free + (currentNode->size + NODESIZE);
@@ -42,7 +41,7 @@ void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
 
 void print_heap(FILE *f) {
   printf("Printing the heap\n");
-  freeNode* currentNode = freeList;
+  freeNode* currentNode = freelist;
   while (currentNode !=NULL) {
     fprintf(f, "%" PRIuPTR, (uintptr_t)currentNode);
     fprintf(f, ", size: %" PRIuPTR, currentNode->size);

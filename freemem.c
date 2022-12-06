@@ -23,7 +23,7 @@ void freemem(void* p) {
   size_t *sizePtr = (size_t *) (addr - OFFSET);
   size_t size = *sizePtr;
 
-  insertFreeNode(freeList, size, addr);
+  insertFreeNode(freelist, size, addr);
   check_heap();
 }
 
@@ -46,8 +46,8 @@ void insertFreeNode(freeNode* my_freeList,
   // add node in front of the head
   if (free_addr < curr->addr) {
     insertFirstNode(free_size, free_addr, curr);
-    groupAdjacent(freeList);
-    groupAdjacent(freeList);
+    groupAdjacent(freelist);
+    groupAdjacent(freelist);
     return;
   }
 
