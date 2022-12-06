@@ -28,7 +28,6 @@ void check_heap() {
 
 void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,
                    uintptr_t* n_free_blocks) {
-  
   *total_size = totalmalloc;
   *total_free = 0;
   *n_free_blocks = 0;
