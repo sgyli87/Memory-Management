@@ -5,15 +5,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include <string.h>
 #include <time.h>
 #include "mem.h"
 
 #define MAX_IN 50
-int setParamInfo(char* param_name, int* params);
-int strToInt(char* string);
-void printParams(int* params, int size);
-void perform_bench_tests();
+void run_tests();
 void setFE(void *pointer, size_t size);
 void unsetFE(void *pointer);
 
@@ -28,7 +24,7 @@ void unsetFE(void *pointer);
 */
 int main(int argc, char** argv ) {
   // bench[ntrials] [pctget] [pctlarge] [small_limit] [large_limit] [random_seed]
-  int params[6] = {10000, 50, 10, 200, 20000, 0};
+  int params[6] = {0, 0, 0, 0, 0, 0};
 
   // generate random seed
   time_t now;
@@ -38,20 +34,24 @@ int main(int argc, char** argv ) {
     printf("Error extracting time stuff\n");
     return 1;
   }
-  params[5] = tm->tm_hour * 60 + tm->tm_min;
 
-  for(int i = 1; i < argc; i++){
-   setParamInfo(argv[i],params);
-  }
-  
-  perform_bench_tests(params);
+  (argc > 1) ? (params[0] = atoi(argv[1])) : (params[0] = 10000); // ntrials
+  (argc > 2) ? (params[1] = atoi(argv[2])) : (params[1] = 50); // pctget
+  (argc > 3) ? (params[2] = atoi(argv[3])) : (params[2] = 10); // pctlarge
+  (argc > 4) ? (params[3] = atoi(argv[4])) : (params[3] = 200); // small_limit
+  (argc > 5) ? (params[4] = atoi(argv[5])) : (params[4] = 20000); // large_limit
+
+  // initialize random number gen.
+  (argc > 6) ? (params[5] = atoi(argv[6])) : (params[5] = tm->tm_hour * 60 + tm->tm_min); // random_seed
+
+  run_tests(params);
    
   return EXIT_SUCCESS;
 }
 
 /* Define helper functions here. */
 
-void perform_bench_tests(int* params) {
+void run_tests(int* params) {
    int ntrials = params[0];
    int pctget = params[1];
    int pctlarge = params[2];
@@ -132,74 +132,6 @@ void perform_bench_tests(int* params) {
   }
   printf("\n");
   fclose(f);
-}
-
-void printParams(int* params, int size) {
-  for (int i = 0; i < size; i++) {
-    printf("%d ", params[i]);
-  }
-  printf("\n");
-}
-
-int setParamInfo(char* param_string, int* params) {
-  // Split string
-  int i = 0;
-  int e_index = -1;
-  // just use strchr here
-  while (param_string[i]) {
-    if (param_string[i] == '=') {
-      e_index = i;
-    }
-    i++;
-  }
-
-  if (e_index == -1 || e_index == strlen(param_string) - 1) {
-    fprintf(stderr, "Error: Bad param '%s'\n", param_string);
-    exit(EXIT_FAILURE);
-  }
-
-  char param_name[MAX_IN];
-  char param_strNum[MAX_IN];
-
-  strncpy(param_name, param_string, e_index);
-  strncpy(param_strNum, param_string + e_index + 1, strlen(param_name));
-
-  int param_num = strToInt(param_strNum);
-
-  // Set parameters
-  // ntrials, pctget, pctlarge, small_limit, large_limit, random_seed
-  if (!strncmp(param_name, "ntrials", e_index)) {
-    params[0] = param_num;
-  } else if (!strncmp(param_name, "pctget", e_index)) {
-    params[1] = param_num;
-  } else if (!strncmp(param_name, "pctlarge", e_index)) {
-    params[2] = param_num;
-  } else if (!strncmp(param_name, "small_limit", e_index)) {
-    params[3] = param_num;
-  } else if (!strncmp(param_name, "large_limit", e_index)) {
-    params[4] = param_num;
-  } else if (!strncmp(param_name, "random_seed", e_index)) {
-    params[5] = param_num;
-  } else {
-    fprintf(stderr, "Error: Bad param name %s\n", param_name);
-    exit(EXIT_FAILURE);
-  }
-  return 0;
-}
-
-int strToInt(char* str) {
-  int result = 0;
-  int i = 0;
-  while (str[i]) {
-    if (str[i] >= '0' && str[i] <= '9') {
-      result = (result * 10) + (str[i]-'0');
-      str++;
-    } else {
-      fprintf(stderr, "Error: Invalid string to int '%s'\n", str);
-      exit(EXIT_FAILURE);
-    }
-  }
-  return result;
 }
 
 void setFE(void *pointer, size_t size) {
