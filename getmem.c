@@ -40,7 +40,7 @@ void* getmem(uintptr_t size) {
       extendSpace(size);
       if (freeList == NULL) {
          fprintf(stderr, "No memory available.\n");
-         retur NULL;
+         return NULL;
       }
       added = 1;
       space = size;
