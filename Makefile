@@ -18,7 +18,7 @@ getmem.o: getmem.c mem.h
 freemem.o: freemem.c mem.h
 				gcc -Wall -std=c11 -g -c freemem.c
 
-mem_utils.o: mem_utils.c mem_impl.h
+mem_utils.o: mem_utils.c mem_impl.h mem.h
 				gcc -Wall -std=c11 -g -c mem_utils.c
 
 bench.o: bench.c mem.h mem_impl.h
