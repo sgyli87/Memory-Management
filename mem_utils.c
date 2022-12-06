@@ -10,16 +10,10 @@ void check_heap() {
     while (current != NULL && current->next != NULL) {
     // Increasing memory addresses
     assert(current->addr < current->next->addr);
-
     // Positive size and greater than min size
     assert(current->size > 0);
-
-    // Blocks Don't Overlap
     assert((current->addr + current->size) + OFFSET < (current->next->addr));
-
-    // Blocks Don't Touch
     assert((current->addr + current->size) + OFFSET != (current->next->addr));
-
     current = current->next;
     }
     return;

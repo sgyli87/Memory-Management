@@ -99,7 +99,6 @@ void groupAdjacent(freeNode* my_freeList) {
                    curr->size, \
                    curr->next->size)) {
       // group nodes
-      // address doesn't need to be changed since current will always be less)
       freeNode* nextNode = curr->next;
       curr->size = curr->size + nextNode->size + OFFSET;
       curr->next = nextNode->next;
