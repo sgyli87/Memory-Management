@@ -19,7 +19,6 @@ typedef struct freeNode {
   uintptr_t size;  // useable memory, doesn't include freeNode
   uintptr_t addr;
   struct freeNode* next;
-  struct freeNode* prev;
 } freeNode;
 
 /* These global variables would usually be static globals in one module.
