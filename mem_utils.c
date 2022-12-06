@@ -8,17 +8,23 @@
 void check_heap() {
     freeNode* current = freelist;
     while (current != NULL && current->next != NULL) {
-    // Increasing memory addresses
-    assert(current->addr < current->next->addr);
+	// Memory aligned properly
+	assert((uintptr_t)current % (uintptr_t)16 == 0);
 
-    // Positive size and greater than min size
+    // Increasing memory addresses
+    assert((uintptr_t) current < (uintptr_t) current->next);
+
+    // Positive size and no smaller than min size
     assert(current->size > 0);
+	assert(current->size >= MINCHUNK);
 
     // Blocks Don't Overlap
-    assert((current->addr + current->size) + OFFSET < (current->next->addr));
+    assert(((uintptr_t) current + current->size) + NODESIZE 
+	       < ((uintptr_t) current->next));
 
     // Blocks Don't Touch
-    assert((current->addr + current->size) + OFFSET != (current->next->addr));
+    assert(((uintptr_t) current + current->size) + NODESIZE 
+	       != ((uintptr_t) current->next));
 
     current = current->next;
     }
