@@ -1,5 +1,7 @@
 /* bench.c is the benchmarking /test program for mem memory management
    bench.c is implemented as part of HW6, CSE374 22WI
+   Author: Yang Li
+   Date 12/5/2022
 */
 
 #include <stdlib.h>
@@ -23,7 +25,7 @@ void freeHex(void *pointer);
    [random_seed] (time) initial seed for randn
 */
 int main(int argc, char** argv ) {
-  // bench[ntrials] [pctget] [pctlarge] [small_limit] [large_limit] [random_seed]
+  // bench params [ntrials] [pctget] [pctlarge] [small_limit] [large_limit] [random_seed]
   int params[6] = {0, 0, 0, 0, 0, 0};
 
   // generate random seed
@@ -40,7 +42,7 @@ int main(int argc, char** argv ) {
   (argc > 4) ? (params[3] = atoi(argv[4])) : (params[3] = 200); // small_limit
   (argc > 5) ? (params[4] = atoi(argv[5])) : (params[4] = 20000); // large_limit
 
-  // initialize random number gen.
+  // initialize random seed.
   (argc > 6) ? (params[5] = atoi(argv[6])) : (params[5] = tm->tm_hour * 60 + tm->tm_min); // random_seed
 
   run_tests(params);
@@ -71,22 +73,22 @@ void run_tests(int* params) {
    float percent = 0.1;
 
    for (int i = 0; i < ntrials; i++) {
-    if ((rand() % 100 + 1) <= pctget) {  // rand num from 1 to 100
+    if ((rand() % 100 + 1) <= pctget) {  // random number from 1 to 100
       void* p;
       // getmem
-      if ((rand() % 100 + 1) <= pctlarge) {  // rand num from 1 to 100
-        // Large block
-        // rand num from small_limit - large_limit
+      if ((rand() % 100 + 1) <= pctlarge) {  // random number from 1 to 100
+        // for large block
+        // random number from small_limit - large_limit
         size_t pSize = (size_t) (rand() % (large_limit - small_limit)\
                                  + small_limit + 1);
         p = getmem(pSize);
-        setFE(p, pSize);
+        storeHex(p, pSize);
       } else {
-        // Small block
-        // rand num from 1-small_limit
+        // for small block
+        // random number from 1-small_limit
         size_t pSize = (size_t) (rand() % small_limit + 1);
         p = getmem(pSize);
-        setFE(p, pSize);
+        storeHex(p, pSize);
       }
       blocks[size] = p;
       size++;
@@ -94,7 +96,7 @@ void run_tests(int* params) {
       if (size > 0) {
         int index = rand() % size;
         freemem(blocks[index]);
-        unsetFE(blocks[index]);
+        freeHex(blocks[index]);
         blocks[index] = blocks[size - 1];
         size--;
       }
@@ -127,7 +129,7 @@ void run_tests(int* params) {
       percent = percent + 0.1;
     }
 
-    // Free pointers used for mem_stats
+    // free pointers used for mem_stats
     free(total_size);
     free(total_free);
     free(n_free_blocks);
