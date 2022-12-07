@@ -20,7 +20,7 @@ void freemem(void* p) {
     return;
   }
   uintptr_t addr = (uintptr_t) p;
-  size_t *sizePtr = (size_t *) (addr - OFFSET);
+  size_t *sizePtr = (size_t *) (addr - NODESIZE);
   size_t size = *sizePtr;
 
   insertFreeNode(freelist, size, addr);
@@ -75,7 +75,6 @@ void insertFreeNode(freeNode* my_freeList,
 
 /* 
    insert a new node at the beginning.
-   intended to be used in freemem()
 */
 void insertFirstNode(size_t f_size, uintptr_t f_addr, freeNode* next) {
   freelist = makeNewNode(f_size, f_addr, next);
@@ -108,7 +107,7 @@ void groupAdjacent(freeNode* my_freeList) {
                    curr->next->size)) {
       // group nodes
       freeNode* nextNode = curr->next;
-      curr->size = curr->size + nextNode->size + OFFSET;
+      curr->size = curr->size + nextNode->size + NODESIZE;
       curr->next = nextNode->next;
       free(nextNode);
     } else {
