@@ -26,6 +26,22 @@ void check_heap() {
         // Blocks Don't Touch
         assert((uintptr_t)current + current->size + NODESIZE 
 	           != (uintptr_t)current->next);
+    freeNode* current = freelist;
+    while (current != NULL && current->next != NULL) {
+    // increasing memory addresses
+    assert((uintptr_t)current < (uintptr_t)current->next);
+
+    // positive size and no smaller than min size
+    assert(current->size > 0);
+	  assert(current->size >= MINCHUNK);
+
+    // blocks don't overlap
+    assert(( (uintptr_t)current + current->size) + NODESIZE 
+	       < ((uintptr_t)current->next));
+
+    // no strictly adjacent block
+    assert(((uintptr_t)current + current->size) + NODESIZE 
+	       != ( (uintptr_t)current->next));
 
         current = current->next;
         }
