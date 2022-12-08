@@ -1,6 +1,19 @@
-/* freemem.c
-   implements freemem
-   CSE 374 HW6
+/*
+  Copyright[2022] <rico> Legal/Copyright
+  Author: Rico Li
+  UWNetID: kangll
+  Homework 6
+  Date: 12/8/2022
+  Function: freemem.c returns the block of storage
+            at location p to the pool of available 
+			free storage. When freemem returns a 
+			block of storage to the pool, if the 
+			block is physically located in memory 
+			adjacent to one or more other free blocks, 
+			then the free blocks involved should be 
+			combined into a single larger block, 
+			rather than adding the small blocks to 
+			the free list individually.
 */
 
 #include <assert.h>

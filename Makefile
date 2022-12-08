@@ -1,5 +1,6 @@
-# Makefile for mem memory system, CSE374 22WI
-
+# CSE374 22WI, HW6
+# Author: Yang Li
+# Date 12/5/2022
 
 CC = gcc
 CARGS = -Wall -std=c11

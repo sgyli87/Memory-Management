@@ -1,5 +1,9 @@
-/* mem_utils.c utilities to support memory management system.
-   HW6, CSE 374
+/*
+  Copyright[2022] <Li> Legal/Copyright
+  Author: Yang Li, Rico Li
+  UWNetID: yangli99, kangll
+  Homework 6
+  Date: 12/8/2022
 */
 
 #include "mem.h"

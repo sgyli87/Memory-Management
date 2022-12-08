@@ -1,6 +1,14 @@
-/* getmem.c
-   implements getmem (malloc)
-   CSE 374 HW6
+/*
+  Copyright[2022] <Li> Legal/Copyright
+  Author: Yang Li, Rico Li
+  UWNetID: yangli99, kangll
+  Homework 6
+  Date: 12/8/2022
+  Function: getmem.c returns a pointer to a 
+			new block of storage with at least 
+			size bytes of memory. The pointer 
+			to the returned block is aligned 
+			on an 16-byte boundary.
 */
 
 #include <assert.h>
