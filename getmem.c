@@ -15,7 +15,7 @@
 #include "mem.h"
 #include "mem_impl.h"
 
-#define MIN_SIZE 4096
+#define EXTRA_SIZE 4096
 
 /* initialize global variables */
 freeNode* freelist = NULL;
@@ -98,7 +98,7 @@ void* split(freeNode* freeList1, uintptr_t size,size_t space){
       return (void *) firstPartHead;
    }
 
-   // travese to one of the block that will have space soze
+   // travese to one of the block that will have space 
    while (curr->next != NULL && curr->next->size != space) {
       curr = curr->next;
    }
@@ -190,12 +190,12 @@ void insertNewNode(freeNode* list, size_t newSize, uintptr_t newAddr){
 }
 
 /* 
-   request memory space of predefined size from system
-   will be calle when no available space in freelist
+   request memory space of predefined size from underlying 
+   system will be called when no available space in freelist
 */
 void extendSpace(uintptr_t size){
-   uintptr_t requestSize = size > MIN_SIZE ? 
-                           size + (size % 16) : MIN_SIZE;
+   uintptr_t requestSize = size > EXTRA_SIZE ? 
+                           size + (size % 16) : EXTRA_SIZE;
 
    uintptr_t newMem = (uintptr_t)malloc(requestSize + OFFSET);
    if((void *) newMem == NULL){
