@@ -6,28 +6,27 @@
 #include "mem_impl.h"
 
 void check_heap() {
-	if (freelist != NULL) {
-		freeNode* current = freelist->next;
-		while (current != NULL && current->next != NULL) {
-	    // Memory aligned properly
-	    // assert((uintptr_t)current % (uintptr_t)16 == 0);
+    freeNode* current = freelist;
 
-        // Increasing memory addresses
-        assert((uintptr_t)current < (uintptr_t)current->next);
+    while (current != NULL && current->next != NULL) {
+    // Increasing memory addresses
+    assert(current->addr < current->next->addr);
 
-        // Positive size and no smaller than min size
-        assert(current->size > 0);
-	    assert(current->size >= MINCHUNK);
+    // Positive size and greater than min size
+    assert(current->size > 0);
+	assert(current->size >= MINCHUNK);
 
-        // Blocks Don't Overlap
-        assert((uintptr_t)current + current->size + NODESIZE 
-	           < (uintptr_t)current->next);
+    // Blocks Don't Overlap
+    assert((current->addr + current->size) + OFFSET 
+	       < (current->next->addr));
 
-        // Blocks Don't Touch
-        assert((uintptr_t)current + current->size + NODESIZE 
-	           != (uintptr_t)current->next);
-		}
+    // Blocks Don't Touch
+    assert((current->addr + current->size) + OFFSET 
+	       != (current->next->addr));
+
+    current = current->next;
     }
+    return;
 }
 
 void get_mem_stats(uintptr_t* total_size, uintptr_t* total_free,

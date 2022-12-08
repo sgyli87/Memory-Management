@@ -1,4 +1,3 @@
-
 /* getmem.c
    implements getmem (malloc)
    CSE 374 HW6
@@ -32,7 +31,7 @@ void* getmem(uintptr_t size) {
 
    size_t space = spaceAvail(freelist, size);
 
-   if (!space) {
+   if (space == 0) {
       extendSpace(size);
       if (freelist == NULL) {
          fprintf(stderr, "No memory available.\n");
@@ -43,7 +42,7 @@ void* getmem(uintptr_t size) {
 
    check_heap();
    return split(freelist, size, space);
-   // check_heap();
+   check_heap();
 }
 
 /*
@@ -70,21 +69,21 @@ void* split(freeNode* freeList1, uintptr_t size,size_t space){
    freeNode* curr = freeList1;
 
    if (freeList1->size == space) {
-      size_t *firstPart = (size_t *) (curr->addr - NODESIZE);
+      size_t *firstPart = (size_t *) (curr->addr - OFFSET);
       *firstPart = (size_t) size;
       uintptr_t firstPartHead = curr->addr;
       uintptr_t firstPartBack = firstPartHead + size;
       
-      size_t newFirstSize = curr->size - size - NODESIZE;
+      size_t newFirstSize = curr->size - size - OFFSET;
 
-      if((intptr_t) newFirstSize > NODESIZE*2){
+      if((intptr_t) newFirstSize > OFFSET*2){
          size_t *remainFirstPart = (size_t *)firstPartBack;
          *remainFirstPart = newFirstSize;
-         uintptr_t newFirstAddr = firstPartBack + NODESIZE;
+         uintptr_t newFirstAddr = firstPartBack + OFFSET;
          curr->size = newFirstSize;
          curr->addr = newFirstAddr;
       }else{
-         *firstPart = *firstPart + newFirstSize + NODESIZE;
+         *firstPart = *firstPart + newFirstSize + OFFSET;
          freelist = freeList1->next;
          free(curr);
       }
@@ -100,41 +99,41 @@ void* split(freeNode* freeList1, uintptr_t size,size_t space){
    // beginning or the last
 
    if (curr->next == NULL){
-      size_t *lastPart = (size_t *)(curr->addr - NODESIZE);
+      size_t *lastPart = (size_t *)(curr->addr - OFFSET);
       *lastPart = (size_t)size;
       uintptr_t lastPartHead = curr->addr;
       uintptr_t lastPartEnd = lastPartHead + size;
-      size_t newLastSize = curr->size - size - NODESIZE;
+      size_t newLastSize = curr->size - size - OFFSET;
 
-      if((intptr_t)newLastSize > NODESIZE*4) {
+      if((intptr_t)newLastSize > OFFSET*4) {
          size_t *remainLastPart = (size_t *)lastPartEnd;
          *remainLastPart = newLastSize;
-         uintptr_t newLastAddr = lastPartEnd + NODESIZE;
+         uintptr_t newLastAddr = lastPartEnd + OFFSET;
          curr->size = newLastSize;
          curr->addr = newLastAddr;
       }else{
-         *lastPart = *lastPart + newLastSize + NODESIZE;
+         *lastPart = *lastPart + newLastSize + OFFSET;
          freeLastNode(size);
       }
       return (void *) lastPartHead;
    }else{
-      size_t *midPart = (size_t *)(curr->next->addr - NODESIZE);
+      size_t *midPart = (size_t *)(curr->next->addr - OFFSET);
       *midPart = (size_t) size;
       uintptr_t midPartHead = curr->next->addr;
       uintptr_t midPartEnd = midPartHead + size;
 
       freeNode* rest = curr->next->next;
-      size_t newSize = curr->next->size - size - NODESIZE;
+      size_t newSize = curr->next->size - size - OFFSET;
 
-      if ((intptr_t) newSize > NODESIZE*4) {
+      if ((intptr_t) newSize > OFFSET*4) {
          size_t *remainPart = (size_t *)midPartEnd;
          *remainPart = newSize;
-         uintptr_t newAddr = midPartEnd + NODESIZE;
+         uintptr_t newAddr = midPartEnd + OFFSET;
 
          curr->next->size = newSize;
          curr->next->addr = newAddr;
       }else{
-         *midPart = *midPart + newSize + NODESIZE;
+         *midPart = *midPart + newSize + OFFSET;
          free(curr->next);
          curr->next = rest;
       }
@@ -144,7 +143,7 @@ void* split(freeNode* freeList1, uintptr_t size,size_t space){
 
 // creates a new node and returns it
 freeNode* makeNewNode(size_t size, uintptr_t addr, freeNode* next) {
-  freeNode* newNode = (freeNode *) malloc(sizeof(freeNode));
+  freeNode* newNode = (freeNode *) malloc(NODESIZE);
   if (newNode == NULL) {
     printf("newNode is null\n");
     return NULL;
@@ -153,6 +152,13 @@ freeNode* makeNewNode(size_t size, uintptr_t addr, freeNode* next) {
   newNode->addr = addr;
   newNode->next = next;
   return newNode;
+}
+
+/* 
+   insert a new node at the beginning.
+*/
+void insertFirstNode(size_t f_size, uintptr_t f_addr, freeNode* next) {
+  freelist = makeNewNode(f_size, f_addr, next);
 }
 
 /*
@@ -183,17 +189,17 @@ void extendSpace(uintptr_t size){
    uintptr_t requestSize = size > MIN_SIZE ? 
                            size + (size % 16) : MIN_SIZE;
 
-   uintptr_t newMem = (uintptr_t)malloc(requestSize + NODESIZE);
+   uintptr_t newMem = (uintptr_t)malloc(requestSize + OFFSET);
    if((void *) newMem == NULL){
       fprintf(stderr, "Error: Failed to assign.\n");
       freelist = NULL;
    }
-   totalmalloc += requestSize + NODESIZE;
+   totalmalloc += requestSize + OFFSET;
 
    size_t newSize = requestSize;
    size_t *newSizePtr = (size_t *)newMem;
    *newSizePtr = newSize;
-   uintptr_t newAddr = newMem + NODESIZE;
+   uintptr_t newAddr = newMem + OFFSET;
 
    if (freelist == NULL) {
       freelist = makeNewNode(newSize, newAddr, NULL);

@@ -20,7 +20,7 @@ void freemem(void* p) {
     return;
   }
   uintptr_t addr = (uintptr_t) p;
-  size_t *sizePtr = (size_t *) (addr - NODESIZE);
+  size_t *sizePtr = (size_t *) (addr - OFFSET);
   size_t size = *sizePtr;
 
   insertFreeNode(freelist, size, addr);
@@ -73,19 +73,12 @@ void insertFreeNode(freeNode* my_freeList,
   groupAdjacent(my_freeList);
 }
 
-/* 
-   insert a new node at the beginning.
-*/
-void insertFirstNode(size_t f_size, uintptr_t f_addr, freeNode* next) {
-  freelist = makeNewNode(f_size, f_addr, next);
-}
-
 // check if the two nodes are next to each other
 int checkAdjacency(uintptr_t addr1, uintptr_t addr2, size_t size1, size_t size2) {
   if (addr1 > addr2) {
-    return (addr1 - addr2 - size2) == NODESIZE;
+    return (addr1 - addr2 - size2) == OFFSET;
   } else {
-    return (addr2 - addr1 - size1) == NODESIZE;
+    return (addr2 - addr1 - size1) == OFFSET;
   }
 }
 
@@ -107,7 +100,7 @@ void groupAdjacent(freeNode* my_freeList) {
                    curr->next->size)) {
       // group nodes
       freeNode* nextNode = curr->next;
-      curr->size += nextNode->size + NODESIZE;
+      curr->size += nextNode->size + OFFSET;
       curr->next = nextNode->next;
       free(nextNode);
     } else {
