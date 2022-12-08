@@ -107,7 +107,7 @@ void groupAdjacent(freeNode* my_freeList) {
                    curr->next->size)) {
       // group nodes
       freeNode* nextNode = curr->next;
-      curr->size = curr->size + nextNode->size + NODESIZE;
+      curr->size += nextNode->size + NODESIZE;
       curr->next = nextNode->next;
       free(nextNode);
     } else {
