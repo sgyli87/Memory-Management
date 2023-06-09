@@ -1,10 +1,10 @@
-#C based Memory Management
-1. Information
+# C based Memory Management
+1. **Information**
 
-   > Project Name: CSE374 HW6
-   > Author Name: Yang Li
-   > GitLab Repo: https://gitlab.cs.washington.edu/cse374-22au-students/yangli99-kangll/-/tree/main
-   > Date: 12/08/2022
+   - Project Name: CSE374 HW6
+   - Author Name: Yang Li
+   - GitLab Repo: https://gitlab.cs.washington.edu/cse374-22au-students/yangli99-kangll/-/tree/main
+   - Date: 12/08/2022
 
 2. Data Structure and Algorithms
 
